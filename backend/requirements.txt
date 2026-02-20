@@ -1,0 +1,29 @@
+# Core API Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+python-multipart
+
+# Computer Vision & AI
+opencv-python>=4.8.0
+numpy>=1.24.0
+ultralytics>=8.0.0
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Voice Alerts
+pyttsx3>=2.90
+
+# Database (Optional - using file storage by default)
+motor
+pymongo
+
+# Utilities
+python-dotenv
+Pillow
+aiofiles
+
+# GPS Support (for car implementation)
+gpsd-py3
+pyserial
+pynmea2

@@ -1,0 +1,14 @@
+# Road Hazard Detector Logo
+
+This folder contains app assets.
+
+To add a custom logo:
+1. Create a logo image (PNG format recommended)
+2. Name it: logo.png
+3. Place it in this folder
+4. Update pubspec.yaml if needed
+
+Recommended sizes:
+- App icon: 512x512px
+- Splash screen: 1024x1024px
+- Logo: 256x256px

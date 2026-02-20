@@ -1,381 +1,298 @@
-# 🚗 AI Road Hazard Detector - Backend API
+# 🚗 AI Road Hazard Detector
 
-Production-ready FastAPI backend for the mobile hazard detection app with automatic startup and manual pothole marking.
+AI-powered mobile app for detecting and reporting road hazards in real-time with GPS tracking, voice alerts, and cloud backend.
 
-## ✨ New Features
+## ✨ Features
 
-### 🔄 Auto-Start Backend Connection
-- App automatically checks backend connection on startup
-- Shows connection status in splash screen
-- Seamless integration with mobile app
+### � Mobile App (Flutter)
+- **Real-time Detection**: Camera-based AI hazard detection
+- **Manual Marking**: Tap to mark potholes with GPS coordinates
+- **Voice Alerts**: Text-to-speech warnings for detected hazards
+- **Interactive Map**: View all hazards with OpenStreetMap
+- **Route Planning**: Navigate with hazard-aware routing
+- **Statistics**: Track detection metrics and trends
+- **Cloud Sync**: Automatic backend synchronization
 
-### 📍 Manual Pothole Capture
-- **Orange floating button** to manually mark potholes
-- Captures GPS coordinates (latitude/longitude) automatically
-- Shows location details before confirming
-- Instant sync with backend server
-
-### 🤖 Automatic Detection
-- Real-time camera-based detection
-- Auto-saves hazards with GPS data
-- Voice alerts for detected hazards
+### 🔧 Backend API (FastAPI)
+- **RESTful API**: Complete CRUD operations for hazards
+- **Real-time Sync**: Instant data synchronization
+- **Statistics**: Aggregated detection analytics
+- **Cloud Ready**: Deploy on Render, AWS, or any cloud platform
+- **Auto Documentation**: Interactive API docs at `/docs`
 
 ## 🚀 Quick Start
 
-### Windows (with Anaconda)
+### Mobile App
 
-**Quick Start (Recommended):**
 ```bash
-# Double-click to run
-quick_start.bat
+cd mobile
+flutter pub get
+flutter run
 ```
 
-**Full Setup:**
-```bash
-# Double-click to run
-start_server.bat
-```
-
-Or manually:
+### Backend API
 
 ```bash
-# Activate conda environment
-conda activate base
-
-# Install dependencies
+cd backend
 pip install -r requirements.txt
-
-# Start server
 python app.py
 ```
 
-### Linux/Mac
+Server runs at: `http://localhost:5000`
+
+## 📦 Deployment
+
+### Deploy Backend to Render (Free)
+
+1. **Push to GitHub**:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git push -u origin main
+   ```
+
+2. **Deploy on Render**:
+   - Go to [render.com](https://render.com)
+   - Create new Web Service
+   - Connect your GitHub repo
+   - Set root directory: `backend`
+   - Deploy!
+
+3. **Update Mobile App**:
+   - Open app → Settings
+   - Update Backend URL to your Render URL
+   - Save and test
+
+**📖 Detailed Guide**: See [RENDER_DEPLOYMENT_GUIDE.md](RENDER_DEPLOYMENT_GUIDE.md)
+
+### Build Android APK
 
 ```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Start server
-python app.py
+cd mobile
+flutter build apk --release
 ```
 
-## 📡 API Endpoints
+APK location: `mobile/build/app/outputs/flutter-apk/app-release.apk`
 
-### Mobile App Endpoints
+## 📱 Mobile App Usage
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/hazard` | Save hazard from mobile app |
-| `GET` | `/api/hazards` | Get all hazards for map |
-| `GET` | `/api/hazards/nearby` | Get hazards near location |
-| `POST` | `/api/detect` | Run AI detection on image |
-| `GET` | `/api/stats` | Get detection statistics |
-| `DELETE` | `/api/hazard/{id}` | Delete specific hazard |
+### First Time Setup
+1. Grant camera and location permissions
+2. Go to Settings → Update Backend URL (if using cloud)
+3. Return to Detection screen
 
-### System Endpoints
+### Detect Hazards
+- **Automatic**: Tap green "Start" button for continuous detection
+- **Manual**: Tap orange "+" button to mark current location
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | API information |
-| `GET` | `/health` | Health check |
-| `GET` | `/docs` | Interactive API documentation |
+### View on Map
+- Navigate to Map tab
+- See all detected hazards
+- Plan routes avoiding hazards
 
-## 📱 Mobile App Configuration
+### Check Statistics
+- View total hazards detected
+- See recent activity (24h)
+- Track by type and severity
 
-### Backend Connection
+## 🏗️ Project Structure
 
-The mobile app automatically connects to the backend on startup. Update the IP address to match your computer:
-
-**Find your IP address:**
-
-Windows:
-```bash
-ipconfig
-# Look for "IPv4 Address" under your active network adapter
 ```
-
-Linux/Mac:
-```bash
-ifconfig
-# or
-ip addr show
+ai-road-hazard-detector/
+├── backend/                    # FastAPI backend
+│   ├── app.py                 # Main API server
+│   ├── requirements.txt       # Python dependencies
+│   ├── data/                  # Hazard storage
+│   └── model/                 # AI models
+├── mobile/                    # Flutter mobile app
+│   ├── lib/
+│   │   ├── main.dart         # App entry point
+│   │   ├── services/         # Backend integration
+│   │   └── screens/          # UI screens
+│   ├── android/              # Android config
+│   └── pubspec.yaml          # Flutter dependencies
+├── ai/                        # AI training scripts
+├── docs/                      # Documentation
+├── .gitignore                # Git ignore rules
+├── README.md                 # This file
+├── GITHUB_DEPLOYMENT_GUIDE.md # GitHub setup
+└── RENDER_DEPLOYMENT_GUIDE.md # Cloud deployment
 ```
-
-**Update mobile app backend URL:**
-
-In `mobile/lib/services/backend_service.dart`:
-
-```dart
-// Replace with your computer's IP address
-static const String baseUrl = 'http://YOUR_IP_ADDRESS:5000';
-```
-
-### Mobile App Features
-
-#### Manual Pothole Marking
-1. Open the app and grant camera/location permissions
-2. Wait for GPS to acquire location (shown in status panel)
-3. Tap the **orange floating button** (📍) to mark a pothole
-4. Review location details in confirmation dialog
-5. Tap "Mark Pothole" to save with GPS coordinates
-
-#### Automatic Detection
-1. Tap the **green "Start" button** to begin automatic detection
-2. App captures images every 2 seconds
-3. AI detects potholes automatically
-4. Hazards saved with GPS coordinates and speed
-5. Voice alerts notify you of detected hazards
-
-#### View on Map
-- Navigate to "Map" tab to see all marked hazards
-- View your current location
-- See nearby hazards with distance
-
-## 🔄 Auto-Start Guide
-
-For detailed instructions on automatically starting the backend, see [AUTO_START_GUIDE.md](backend/AUTO_START_GUIDE.md).
-
-**Quick Options:**
-1. **Manual Start** - Run `quick_start.bat` before launching app
-2. **Task Scheduler** - Auto-start on Windows login
-3. **Windows Service** - Run as background service
-4. **Docker** - Containerized deployment
-
-## 🗄️ Data Storage
-
-By default, hazards are stored in `backend/data/hazards.json`.
-
-For production, consider using:
-- MongoDB (already supported via `db.py`)
-- PostgreSQL with PostGIS
-- Firebase Realtime Database
 
 ## 🔧 Configuration
 
-### Port Configuration
+### Backend URL
 
-Default port is `5000`. To change:
+**Option 1: In-App Settings** (Recommended)
+- Open app → Settings
+- Tap "Backend Server URL"
+- Enter your URL
+- Save
 
-```python
-# In app.py, modify:
-uvicorn.run(app, host="0.0.0.0", port=YOUR_PORT)
+**Option 2: Code** 
+Edit `mobile/lib/services/backend_service.dart`:
+```dart
+static String _baseUrl = 'https://your-api.onrender.com';
 ```
 
-### CORS Configuration
+### Local Development
 
-For production, update allowed origins:
-
-```python
-# In app.py:
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://your-domain.com"],  # Specify your domain
-    ...
-)
-```
-
-## 📊 API Usage Examples
-
-### Save Hazard (from mobile app)
-
+Find your IP address:
 ```bash
-curl -X POST "http://localhost:5000/api/hazard" \
-  -F "latitude=40.7128" \
-  -F "longitude=-74.0060" \
-  -F "hazard_type=pothole" \
-  -F "speed=45.5" \
-  -F "timestamp=2024-01-15T10:30:00"
+# Windows
+ipconfig
+
+# Linux/Mac
+ifconfig
 ```
 
-### Get All Hazards
+Use: `http://YOUR_IP:5000`
 
-```bash
-curl "http://localhost:5000/api/hazards?limit=10"
-```
+## 📡 API Endpoints
 
-### Get Nearby Hazards
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/hazard` | Save new hazard |
+| `GET` | `/api/hazards` | Get all hazards |
+| `GET` | `/api/hazards/nearby` | Get nearby hazards |
+| `GET` | `/api/stats` | Get statistics |
+| `GET` | `/health` | Health check |
+| `GET` | `/docs` | API documentation |
 
-```bash
-curl "http://localhost:5000/api/hazards/nearby?lat=40.7128&lng=-74.0060&radius_m=1000"
-```
+## 🛠️ Tech Stack
 
-### Get Statistics
+### Mobile
+- **Flutter** - Cross-platform framework
+- **Dart** - Programming language
+- **Camera** - Real-time capture
+- **Geolocator** - GPS tracking
+- **Flutter Map** - OpenStreetMap integration
+- **Flutter TTS** - Voice alerts
 
-```bash
-curl "http://localhost:5000/api/stats"
-```
+### Backend
+- **FastAPI** - Modern Python web framework
+- **Uvicorn** - ASGI server
+- **Pydantic** - Data validation
+- **Python 3.11+** - Programming language
 
-## 🧪 Testing
+### AI/ML
+- **YOLOv8** - Object detection
+- **OpenCV** - Image processing
+- **PyTorch** - Deep learning
 
-### Test with curl
+## 📊 Features in Detail
 
-```bash
-# Health check
-curl http://localhost:5000/health
+### Real-time Detection
+- Captures frames every 2 seconds
+- AI processes images for hazards
+- Automatic GPS tagging
+- Voice alerts on detection
 
-# Get API info
-curl http://localhost:5000/
+### Manual Marking
+- Orange floating button
+- Captures current GPS location
+- Shows location details
+- Confirmation dialog
 
-# Get hazards
-curl http://localhost:5000/api/hazards
-```
+### Map Integration
+- OpenStreetMap (no Google Maps API needed)
+- Real-time location tracking
+- Hazard markers with details
+- Route planning with OSRM
 
-### Test with Python
+### Statistics Dashboard
+- Total hazards detected
+- Recent activity (24h)
+- Average speed tracking
+- Breakdown by type and severity
 
-```python
-import requests
+## 🔒 Security
 
-# Save hazard
-response = requests.post(
-    'http://localhost:5000/api/hazard',
-    data={
-        'latitude': 40.7128,
-        'longitude': -74.0060,
-        'hazard_type': 'pothole',
-        'speed': 45.5,
-        'timestamp': '2024-01-15T10:30:00'
-    }
-)
-print(response.json())
-
-# Get hazards
-response = requests.get('http://localhost:5000/api/hazards')
-print(response.json())
-```
-
-## 🔍 Monitoring
-
-### View Logs
-
-The server logs all requests and operations:
-
-```
-INFO:     ✓ Hazard saved: H000001 at (40.7128, -74.0060)
-INFO:     ✓ Returned 10 hazards (total: 127)
-INFO:     ✓ Found 3 hazards within 1000m of (40.7128, -74.0060)
-```
-
-### Check Server Status
-
-```bash
-curl http://localhost:5000/health
-```
-
-Response:
-```json
-{
-  "status": "healthy",
-  "timestamp": "2024-01-15T10:30:00",
-  "hazards_count": 127,
-  "storage": "file-based",
-  "version": "2.0.0"
-}
-```
-
-## 🚗 Car Implementation
-
-For in-car detection with camera:
-
-```bash
-# Run car detection system
-python main_car.py
-
-# Or headless mode (no display)
-python main_car_headless.py
-```
-
-See `CAR_IMPLEMENTATION_GUIDE.md` for detailed setup.
-
-## 📦 Dependencies
-
-- **FastAPI**: Modern web framework
-- **Uvicorn**: ASGI server
-- **OpenCV**: Computer vision
-- **Ultralytics**: YOLOv8 detection
-- **NumPy**: Numerical operations
-- **PyTorch**: Deep learning backend
-
-## 🔒 Security Notes
-
-For production deployment:
-
-1. **Use HTTPS**: Configure SSL/TLS certificates
-2. **Authentication**: Add API key or JWT authentication
-3. **Rate Limiting**: Prevent API abuse
-4. **Input Validation**: Already implemented via Pydantic
-5. **CORS**: Restrict to specific domains
-6. **Database**: Use proper database with authentication
+- ✅ Input validation with Pydantic
+- ✅ CORS configuration
+- ✅ HTTPS on Render (automatic)
+- ✅ No hardcoded secrets
+- ✅ Environment variable support
 
 ## 🐛 Troubleshooting
 
-### Port Already in Use
-
-```bash
-# Windows - Find and kill process on port 5000
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
-
-# Linux/Mac
-lsof -ti:5000 | xargs kill -9
-```
-
-### Module Not Found
-
-```bash
-pip install -r requirements.txt --upgrade
-```
-
-### YOLO Model Not Loading
-
-The API will fall back to simulation mode if YOLO is unavailable. To use real detection:
-
-```bash
-# Ensure model file exists
-ls backend/model/yolov8n.pt
-
-# Or download it
-python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
-```
-
 ### Mobile App Can't Connect
 
-1. Check firewall settings
-2. Ensure both devices are on same network
-3. Verify IP address is correct
-4. Test with: `curl http://YOUR_IP:5000/health`
+1. Check backend is running
+2. Verify URL in Settings
+3. Ensure same WiFi network (local)
+4. Test: `curl http://YOUR_URL/health`
 
-## 📈 Performance
-
-- **Concurrent Requests**: Supports async operations
-- **Response Time**: < 100ms for most endpoints
-- **Detection Time**: ~200-500ms per image (depends on hardware)
-- **Storage**: File-based (fast for < 10,000 hazards)
-
-## 🔄 Updates
-
-To update the backend:
+### Build Errors
 
 ```bash
-git pull
+# Clean and rebuild
+cd mobile
+flutter clean
+flutter pub get
+flutter build apk
+```
+
+### Backend Issues
+
+```bash
+# Reinstall dependencies
+cd backend
 pip install -r requirements.txt --upgrade
 python app.py
 ```
 
+## 📚 Documentation
+
+- [GitHub Deployment Guide](GITHUB_DEPLOYMENT_GUIDE.md) - Push to GitHub
+- [Render Deployment Guide](RENDER_DEPLOYMENT_GUIDE.md) - Cloud hosting
+- [Android Deployment](ANDROID_DEPLOYMENT.md) - APK building
+- [Architecture](docs/architecture.md) - System design
+- [API Documentation](docs/documentation.md) - API details
+
+## 🎯 Roadmap
+
+- [ ] iOS support
+- [ ] Offline mode
+- [ ] Image upload with hazards
+- [ ] User authentication
+- [ ] Community reporting
+- [ ] Admin dashboard
+- [ ] Push notifications
+- [ ] Multi-language support
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## � License
+
+This project is open source and available under the MIT License.
+
+## 👥 Authors
+
+- Your Name - Initial work
+
+## 🙏 Acknowledgments
+
+- Flutter team for amazing framework
+- FastAPI for modern Python web framework
+- OpenStreetMap for free mapping
+- Ultralytics for YOLOv8
+
 ## 📞 Support
 
-For issues or questions:
-- Check `/docs` endpoint for API documentation
-- Review logs for error messages
-- Ensure all dependencies are installed
-
-## 📄 License
-
-Part of AI Road Hazard Detector project.
+- 📧 Email: your.email@example.com
+- 🐛 Issues: [GitHub Issues](https://github.com/YOUR_USERNAME/ai-road-hazard-detector/issues)
+- � Docs: [Documentation](docs/)
 
 ---
 
-**Ready to detect hazards! 🚗💨**
+**Made with ❤️ for safer roads**
+
+🚗 Happy detecting! 🛣️
