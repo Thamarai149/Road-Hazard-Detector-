@@ -12,6 +12,8 @@ dependencies:
   
   # UI & Icons
   cupertino_icons: ^1.0.6
+  google_fonts: ^6.1.0
+  flutter_animate: ^4.5.0
   
   # Camera & Image Processing
   camera: ^0.10.5+5
