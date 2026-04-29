@@ -29,12 +29,15 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Base directory of the backend
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Create necessary directories
-os.makedirs("backend/uploads", exist_ok=True)
-os.makedirs("backend/data", exist_ok=True)
+os.makedirs(os.path.join(BASE_DIR, "uploads"), exist_ok=True)
+os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
 
 # In-memory storage (replace with database in production)
-HAZARDS_FILE = "backend/data/hazards.json"
+HAZARDS_FILE = os.path.join(BASE_DIR, "data", "hazards.json")
 hazards_db = []
 
 # Load existing hazards
@@ -280,18 +283,18 @@ async def detect_hazard_from_image(image: UploadFile = File(...)):
             from detector import detect_hazard
             
             # Run detection
-            processed_img, hazard_detected = detect_hazard(img)
+            processed_img, hazard_detected, confidence = detect_hazard(img)
             
             return {
                 "status": "success",
                 "hazard_detected": hazard_detected,
-                "confidence": 0.85 if hazard_detected else 0.0,
+                "confidence": float(confidence),
                 "message": "Pothole detected!" if hazard_detected else "No hazards detected"
             }
             
-        except ImportError:
-            # Fallback: simulate detection
-            logger.warning("YOLO detector not available, using simulation")
+        except (ImportError, ValueError) as e:
+            # Fallback: simulate detection if import fails or return values don't match
+            logger.warning(f"Using simulation fallback: {e}")
             
             # Simple simulation based on image properties
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -305,7 +308,7 @@ async def detect_hazard_from_image(image: UploadFile = File(...)):
                 "hazard_detected": hazard_detected,
                 "confidence": 0.65 if hazard_detected else 0.0,
                 "message": "Possible hazard detected (simulation)" if hazard_detected else "No hazards detected",
-                "note": "Using simulation mode - YOLO model not loaded"
+                "note": "Using simulation mode - YOLO model error"
             }
             
     except Exception as e:
