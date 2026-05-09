@@ -440,22 +440,30 @@ async def health_check():
         "version": "2.0.0"
     }
 
+@app.get('/ping')
+async def ping():
+    """Keep-alive ping for Render free tier to prevent service from stopping"""
+    return {"status": "alive", "time": datetime.now().isoformat()}
+
 # ==================== RUN SERVER ====================
 
 if __name__ == "__main__":
     import uvicorn
+    import os
+    
+    port = int(os.environ.get("PORT", 5000))
     
     print("\n" + "=" * 60)
     print("🚗 AI Road Hazard Detector - Backend API Server")
     print("=" * 60)
-    print("Starting server on http://0.0.0.0:5000")
-    print("API Documentation: http://localhost:5000/docs")
+    print(f"Starting server on http://0.0.0.0:{port}")
+    print(f"API Documentation: http://0.0.0.0:{port}/docs")
     print("=" * 60 + "\n")
     
     uvicorn.run(
-        app,
+        "app:app",
         host="0.0.0.0",
-        port=5000,
+        port=port,
         log_level="info",
         access_log=True
     )

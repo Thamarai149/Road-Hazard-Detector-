@@ -3,10 +3,18 @@ import numpy as np
 from ultralytics import YOLO
 import os
 import logging
+import torch
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Optimize PyTorch for low memory environments (like Render Free Tier)
+try:
+    torch.set_num_threads(1)
+    logger.info("✓ PyTorch threads limited to 1 for memory optimization")
+except Exception as e:
+    logger.warning(f"Could not set torch threads: {e}")
 
 # Base directory of the backend
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

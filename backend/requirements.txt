@@ -1,18 +1,17 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 # Core API Framework
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 pydantic>=2.0.0
 python-multipart
 
-# Computer Vision & AI
-opencv-python>=4.8.0
+# Computer Vision & AI (Optimized for Render Free Tier)
+opencv-python-headless>=4.8.0
 numpy>=1.24.0
 ultralytics>=8.0.0
-torch>=2.0.0
-torchvision>=0.15.0
-
-# Voice Alerts
-pyttsx3>=2.90
+torch>=2.0.0+cpu
+torchvision>=0.15.0+cpu
 
 # Database (Optional - using file storage by default)
 motor
@@ -22,8 +21,3 @@ pymongo
 python-dotenv
 Pillow
 aiofiles
-
-# GPS Support (for car implementation)
-gpsd-py3
-pyserial
-pynmea2
