@@ -23,6 +23,8 @@ subprojects {
                     sourceCompatibility = JavaVersion.VERSION_17
                     targetCompatibility = JavaVersion.VERSION_17
                 }
+                // Override NDK version for all subprojects to match installed NDK
+                ndkVersion = "27.0.12077973"
             }
         }
         
