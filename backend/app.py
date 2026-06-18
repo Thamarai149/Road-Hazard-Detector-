@@ -13,8 +13,10 @@ Endpoints:
 
 import os
 import json
+import asyncio
 import cv2
 import numpy as np
+import httpx
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form, Query, Body
 from fastapi.responses import JSONResponse, FileResponse
@@ -59,6 +61,22 @@ def save_hazards():
     except Exception as e:
         logger.error(f"Error saving hazards: {e}")
 
+# Self-ping to prevent Render free tier from sleeping (every 10 minutes)
+SELF_URL = os.environ.get("RENDER_EXTERNAL_URL", "http://localhost:5000")
+
+async def keep_alive():
+    """Pings the /ping endpoint every 10 minutes to keep Render awake."""
+    await asyncio.sleep(30)  # wait for server to fully start
+    async with httpx.AsyncClient() as client:
+        while True:
+            try:
+                resp = await client.get(f"{SELF_URL}/ping", timeout=10)
+                logger.info(f"🔄 Keep-alive ping: {resp.status_code}")
+            except Exception as e:
+                logger.warning(f"⚠️ Keep-alive ping failed: {e}")
+            await asyncio.sleep(600)  # ping every 10 minutes
+
+
 # Lifespan event handler
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -70,11 +88,16 @@ async def lifespan(app: FastAPI):
     logger.info(f"✓ Loaded {len(hazards_db)} hazards from storage")
     logger.info("✓ API ready for mobile app connections")
     logger.info("✓ Documentation available at /docs")
+    logger.info(f"✓ Keep-alive pinging: {SELF_URL}/ping every 10 minutes")
     logger.info("=" * 60)
-    
+
+    # Start keep-alive background task
+    task = asyncio.create_task(keep_alive())
+
     yield
-    
+
     # Shutdown
+    task.cancel()
     logger.info("Shutting down API server...")
     save_hazards()
     logger.info(f"✓ Saved {len(hazards_db)} hazards to storage")

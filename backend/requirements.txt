@@ -22,3 +22,4 @@ pymongo
 python-dotenv
 Pillow
 aiofiles
+httpx
